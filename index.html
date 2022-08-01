@@ -1,0 +1,128 @@
+<DOCTYPE html!>
+    <!--EVERYTHING WAS WRITTEN FROM SCRATCH-->
+    <html>
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>index</title>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $("#flip").click(function() {
+                    $("#panel").slideDown("slow");
+                });
+            });
+        </script>
+        <style>
+            * {
+                box-sizing: border-box;
+                margin: 0px;
+                padding: 0px;
+                outline: 0;
+            }
+            /* .form {
+      position: relative;
+      margin: 5%;
+      margin-left: 50%;
+	  
+    } */
+            
+            body {
+                background-image: url('trial2.jpg');
+                background-repeat: no-repeat;
+                background-attachment: fixed;
+                background-size: cover;
+            }
+            
+            .contain {
+                margin: -20% 20% 50% 60%;
+                /* text-shadow:3px 5px 5px yellowgreen ; */
+                position: fixed;
+            }
+            
+            .btn1 {
+                text-decoration: none;
+                color: black;
+                font-size: 20px;
+                border: 1px solid silver;
+                padding: 30px;
+                text-align: center;
+                border-radius: 100px;
+                background-color: yellow;
+                font-family: Verdana, sans-serif;
+                box-shadow: 3px 5px 5px silver;
+            }
+            
+            #flip {
+                margin: 5% 20% 0% 25%;
+                padding: 15px;
+                text-align: center;
+                border-radius: 50px;
+                background-color: rgba(200, 201, 211, 0.408);
+                border: solid 1px #c3c3c3;
+                font-family: Verdana, sans-serif;
+                font-size: 14px;
+            }
+
+            #name {
+                margin: 0% 20% -5% 51%;
+                text-decoration: none;
+                text-align: center;
+                font-size: 18px;
+                padding: 5px;
+                color: black;
+                background-color: rgba(200, 201, 211, 0.408);
+                border-radius: 100px;
+                font-family: Verdana, sans-serif;
+            }
+            
+            .paragraph {
+                margin: 0% 20% 0% 30%;
+                text-decoration: none;
+                text-align: center;
+                border: 1px solid silver;
+                font-size: 14px;
+                padding: 15px;
+                border-radius: 50px;
+                color: black;
+                background-color: rgba(200, 201, 211, 0.408);
+                font-family: Verdana, sans-serif;
+                width: 700px;
+            }
+            
+            #panel {
+                padding: px;
+                display: none;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id = "name">
+           <b> Credits:</b><br/><br/>
+            Pheerunggee Waleeyah<br/>
+            Baahir Sheik Ally<br/>
+            Ismaeiil Khan <br/>
+        </div>
+
+        <canvas id="birdAnimation"></canvas>
+        <script src="sprite-animation-demo.js"></script>
+        <div class="contain">
+            <a href="NewGame.html" class="btn1">Start Game<a><br/><br/><br/><br/>
+             </div>
+
+                <div id="flip">Click HERE to have details on Pailles en Queue</div><br/><br/>
+                <div id="panel">
+                       <div class="paragraph">
+                        <p>Essentially, these birds namely, Pailles en Queue are found in all tropical ocean areas.</p>
+                        <p>Their longevity is 10 years.</p>
+                        <p>They feed mainly on fish, particularly flying fish,<br/> but may supplement this with squid and crustaceans.</p>
+                        <p>Pailles en Queue choosen as the emblem of Air Mauritus</p>
+                       </div>
+                </div>
+            
+           
+        </body>
+    </html>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        canvas {
+            background-color: #00b7ff;
+        }
+    </style>
+</head>
+
+<body onload="startGame()">
+ <!-- reference from w3school -->
+    <script>
+        var player;
+        var background;
+
+        var myObstacles = [];
+        var birdEnemies = [];
+        var foods = [];
+        var ghostsToKill = [];
+
+        var myScore;
+        var finalScore;
+        var endGame;
+
+        //Start the game function
+        function startGame() {
+            myGameArea.start();
+            player = new component(200, 100, "Bird1.png", 100, 400, "image");
+            background = new component(1500, 900, "trial2.jpg", 0, 0, "background");
+
+            myScore = new component("30px", "Consolas", "black", 280, 40, "text");
+            endGame = new component("30px", "Consolas", "black", 1200 / 2, 900 / 2, "text");
+            520052
+        }
+
+
+        //Setting the canva - Game map & Controls
+        var myGameArea = {
+            canvas: document.createElement("canvas"),
+            start: function() {
+                this.canvas.width = 1500;
+                this.canvas.height = 900;
+                this.context = this.canvas.getContext("2d");
+                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+                this.frameNo = 0;
+
+                //Update every 20 miliseconds
+                this.interval = setInterval(updateGameArea, 20);
+
+                //Adding keyboard listener
+                window.addEventListener('keydown', function(e) {
+                    myGameArea.keys = (myGameArea.keys || []);
+                    myGameArea.keys[e.keyCode] = true;
+                })
+                window.addEventListener('keyup', function(e) {
+                    myGameArea.keys[e.keyCode] = false;
+                })
+            },
+            clear: function() {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            },
+            stop: function() {
+                clearInterval(this.interval);
+            }
+        }
+
+        //Component function - Setting all the propertise for each components
+        function component(width, height, color, x, y, type) {
+            this.type = type;
+            if (type == "image" || type == "background") {
+                this.image = new Image();
+                this.image.src = color;
+            }
+            this.gameArea = myGameArea;
+            this.width = width;
+            this.height = height;
+            this.speedX = 0;
+            this.speedY = 0;
+            this.x = x;
+            this.y = y;
+            this.update = function() {
+                ctx = myGameArea.context;
+                if (type == "image" || type == "background") {
+                    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+                    if (type == "background") {
+                        ctx.drawImage(this.image, this.x + this.width, this.y, this.width, this.height);
+                    }
+                } else if (type == "text") {
+                    ctx.font = this.width + " " + this.height;
+                    ctx.fillStyle = color;
+                    ctx.fillText(this.text, this.x, this.y);
+
+                } else {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                }
+            }
+            this.newPos = function() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.type == "background") {
+                    if (this.x == -(this.width)) {
+                        this.x = 0;
+                    }
+                }
+            }
+            this.crashWith = function(otherobj) {
+                var myleft = this.x;
+                var myright = this.x + (this.width / 2);
+                var mytop = this.y;
+                var mybottom = this.y + (this.height);
+                var otherleft = otherobj.x;
+                var otherright = otherobj.x + (otherobj.width);
+                var othertop = otherobj.y;
+                var otherbottom = otherobj.y + (otherobj.height);
+                var crash = true;
+                if ((mybottom < othertop) || (mytop > otherbottom) || (myright < otherleft) || (myleft > otherright)) {
+                    crash = false;
+                }
+                return crash;
+            }
+        }
+
+        //Update the canva - Update all the components
+        function updateGameArea() {
+
+            var x, height, gap, minHeight, maxHeight, minGap, maxGap;
+
+
+            for (i = 0; i < myObstacles.length; i += 1) {
+                if (player.crashWith(myObstacles[i])) {
+                    myGameArea.stop();
+                    afterCollision();
+                    return;
+                }
+            }
+
+            for (i = 0; i < birdEnemies.length; i += 1) {
+                if (player.crashWith(birdEnemies[i])) {
+                    myGameArea.stop();
+                    afterCollision();
+                    return;
+                }
+            }
+
+            for (i = 0; i < foods.length; i += 1) {
+                if (player.crashWith(foods[i])) {
+                    myGameArea.frameNo += 300;
+                }
+            }
+
+            myGameArea.clear();
+            //makes the background move backward on the x axis 
+            background.speedX = -2;
+            background.newPos();
+            background.update();
+
+            myGameArea.frameNo += 1;
+            if (myGameArea.frameNo == 1 || everyinterval(300)) {
+                x = myGameArea.canvas.width;
+                minHeight = 20;
+                maxHeight = 500;
+                height = Math.floor(Math.random() * (maxHeight - minHeight + 1) + minHeight);
+                minGap = 50;
+                maxGap = 200;
+                gap = Math.floor(Math.random() * (maxGap - minGap + 1) + minGap);
+
+                myObstacles.push(new component(150, x - height - gap, "coconut1.webp", x, height + gap, "image"));
+            }
+            // the coconut tree was imported from the internet in webp format
+
+            if (myGameArea.frameNo == 1 || everyinterval(100)) {
+                x = myGameArea.canvas.width;
+                minHeight = 0;
+                maxHeight = 500;
+                height = Math.floor(Math.random() * (maxHeight - minHeight + 1) + minHeight);
+                minGap = 0;
+                maxGap = 500;
+                gap = Math.floor(Math.random() * (maxGap - minGap + 1) + minGap);
+
+                birdEnemies.push(new component(100, 100, "enemyBird.png", x, height + gap, "image"));
+            }
+            //the enemy bird(black bird) was drawn using the krita app
+
+            if (myGameArea.frameNo == 1 || everyinterval(100)) {
+                x = myGameArea.canvas.width;
+                minHeight = 600;
+                maxHeight = 480;
+                height = Math.floor(Math.random() * (maxHeight - minHeight + 1) + minHeight);
+
+                foods.push(new component(100, 80, "fish.png", x, height, "image"));
+            }
+                //the fish was drawn using the krita app
+
+            for (i = 0; i < myObstacles.length; i += 1) {
+                myObstacles[i].x += -2;
+                myObstacles[i].update();
+            }
+
+            for (i = 0; i < birdEnemies.length; i += 1) {
+                birdEnemies[i].x += -15;
+                birdEnemies[i].update();
+            }
+
+            for (i = 0; i < foods.length; i += 1) {
+                foods[i].x += -10;
+                foods[i].update();
+            }
+
+            player.speedX = 0;
+            player.speedY = 0;
+
+            //spritesheet was used here, the bird flaps it wings on key up/down/right/left
+            //Move backward
+            if (myGameArea.keys && myGameArea.keys[37]) {
+                player.image.src = "Bird1.png"
+                player.speedX = -8;
+            } else {
+                player.image.src = "Bird2.png"
+            }
+
+            //Move Upward
+            if (myGameArea.keys && myGameArea.keys[38]) {
+                player.image.src = "la haut.png";
+                player.speedY = -8;
+            }
+
+            //Move forward
+            if (myGameArea.keys && myGameArea.keys[39]) {
+                player.speedX = 8;
+            }
+
+            //Move downsward
+            if (myGameArea.keys && myGameArea.keys[40]) {
+                player.image.src = "au bas.png";
+                player.speedY = 8;
+            }
+
+
+            myScore.text = "SCORE: " + Math.round(myGameArea.frameNo / 60);
+            myScore.update();
+
+            player.newPos();
+            player.update();
+        }
+
+        function everyinterval(n) {
+            if ((myGameArea.frameNo / n) % 1 == 0) {
+                return true;
+            }
+            return false;
+        }
+        //once a collision occurs, the socre is calulated; by dividng the frame number(which updates every 20s as mentionned above) by 60
+        function afterCollision() {
+            endGame.text = "End of game. Your score is: " + Math.round(myGameArea.frameNo / 60);
+            endGame.update();
+            
+            setTimeout(() => {
+                //when a collision occurs, after2 seconds, the page endgame.html is loaded
+                window.location.href = 'endgame.html';
+            }, 2000)
+        }
+    </script>
+
+</body>
+
+</html>
